@@ -14,7 +14,7 @@
 .cxx
 local.properties
 /app/src/main/res/raw/messease.json
-/app/src/google-services.json
+#/app/src/google-services.json
 # Ignore IntelliJ IDEA project files
 .idea
 *.iml
