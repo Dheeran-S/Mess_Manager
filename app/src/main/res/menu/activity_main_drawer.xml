@@ -14,6 +14,11 @@
 
             />
         <item
+            android:id="@+id/nav_mess_leave"
+            android:icon="@drawable/outline_calendar_month_24"
+            android:title="Mess Leave" />
+            
+        <item
             android:id="@+id/nav_messCommitteeActivity"
             android:icon="@drawable/baseline_people_alt_24"
             android:title="Mess Committee" />
