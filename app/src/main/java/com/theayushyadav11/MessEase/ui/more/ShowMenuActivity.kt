@@ -46,44 +46,157 @@ class ShowMenuActivity : AppCompatActivity() {
     val REQUEST_CODE = 1232
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        binding = ActivityShowMenuBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        try {
+            mess = Mess(this)
+            mess.log("ShowMenuActivity onCreate started")
+            enableEdgeToEdge()
+            binding = ActivityShowMenuBinding.inflate(layoutInflater)
+            setContentView(binding.root)
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+                insets
+            }
 
+            assign()
+            
+            // Check permissions first, then initialize
+            if (hasPermissions()) {
+                mess.log("Permissions already granted")
+                initialise()
+            } else {
+                mess.log("Requesting permissions")
+                askPermissions()
+            }
+        } catch (e: Exception) {
+            mess.log("Critical error in onCreate: ${e.message}")
+            e.printStackTrace()
+            try {
+                Mess(this).toast("Failed to open menu: ${e.message}")
+            } catch (ex: Exception) {
+                // Can't even show toast
+            }
+            finish()
         }
-
-        askPermissions()
-        initialise()
-        assign()
+    }
+    
+    private fun hasPermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            // Android 13+ doesn't need WRITE_EXTERNAL_STORAGE for app-specific directories
+            true
+        } else {
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.WRITE_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(
+                this, Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     private fun initialise() {
-        mess = Mess(this)
         mess.addPb("Loading menu...")
-        getShowingMenu { menu ->
-            currentMenu = menu
-            assign()
-            setFood(menu.menu)
-            pdfConversion()
-            initFilePaths()
-            openPDF()
-            finish()
-
-
-
-
+        mess.log("initialise() called")
+        try {
+            getShowingMenu { menu ->
+                try {
+                    mess.log("Menu received, processing...")
+                    currentMenu = menu
+                    setFood(menu.menu)
+                    mess.log("Food set, creating PDF...")
+                    pdfConversion()
+                    mess.log("PDF created, initializing file paths...")
+                    initFilePaths()
+                    mess.log("File paths initialized, opening PDF...")
+                    openPDF()
+                    mess.log("PDF opened successfully")
+                    mess.pbDismiss()
+                    finish()
+                } catch (e: Exception) {
+                    mess.log("Error in menu processing: ${e.message}")
+                    e.printStackTrace()
+                    mess.pbDismiss()
+                    mess.toast("Error creating PDF: ${e.message}")
+                    finish()
+                }
+            }
+        } catch (e: Exception) {
+            mess.log("Error in initialise: ${e.message}")
+            e.printStackTrace()
             mess.pbDismiss()
+            mess.toast("Failed to load menu")
+            finish()
         }
     }
 
     fun getShowingMenu(onResult: (Menu) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
-            val menu = MenuDatabase.getDatabase(this@ShowMenuActivity).menuDao().getShowMenu()
-            onResult(menu)
+            try {
+                val dao = MenuDatabase.getDatabase(this@ShowMenuActivity).menuDao()
+                var menu: Menu? = null
+                
+                // Try id=2 first (edited menu)
+                try {
+                    menu = dao.getShowMenu()
+                    mess.log("Successfully got menu with id=2")
+                } catch (e: Exception) {
+                    mess.log("Menu with id=2 not found: ${e.message}")
+                }
+                
+                // Try id=0 (main menu from Firebase)
+                if (menu == null) {
+                    try {
+                        menu = dao.getMenu()
+                        mess.log("Successfully got menu with id=0")
+                    } catch (e: Exception) {
+                        mess.log("Menu with id=0 not found: ${e.message}")
+                    }
+                }
+                
+                // If still null, try id=1 (edited menu)
+                if (menu == null) {
+                    try {
+                        menu = dao.getEditedMenu()
+                        mess.log("Successfully got menu with id=1")
+                    } catch (e: Exception) {
+                        mess.log("Menu with id=1 not found: ${e.message}")
+                    }
+                }
+                
+                // If STILL null, fetch from Firebase
+                if (menu == null) {
+                    mess.log("No menu in database, fetching from Firebase")
+                    runOnUiThread {
+                        mess.pbDismiss()
+                        mess.toast("No menu available in database. Please wait for menu to sync from Firebase.")
+                        finish()
+                    }
+                    return@launch
+                }
+                
+                // Validate menu structure
+                if (menu.menu.isEmpty() || menu.menu.size < 8) {
+                    mess.log("Menu structure invalid: size=${menu.menu.size}")
+                    runOnUiThread {
+                        mess.pbDismiss()
+                        mess.toast("Menu data is incomplete. Size: ${menu.menu.size}")
+                        finish()
+                    }
+                    return@launch
+                }
+                
+                runOnUiThread {
+                    onResult(menu)
+                }
+            } catch (e: Exception) {
+                mess.log("Critical error getting menu: ${e.message}")
+                e.printStackTrace()
+                runOnUiThread {
+                    mess.pbDismiss()
+                    mess.toast("Error loading menu: ${e.message}")
+                    finish()
+                }
+            }
         }
     }
 
@@ -132,18 +245,46 @@ class ShowMenuActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE) {
-            pdfConversion()
-
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                mess.log("Permissions granted, initializing")
+                initialise()
+            } else {
+                mess.log("Permissions denied")
+                mess.toast("Storage permission is required to download the menu")
+                finish()
+            }
         }
-
         isClicked = false
     }
 
     private fun setFood(menu: List<DayMenu>) {
-        for (i in 0..3) {
-            for (j in 0..6) {
-                texts[i][j].text = menu[j + 1].particulars[i].food
+        try {
+            if (menu.isEmpty() || menu.size < 8) {
+                mess.log("Menu size insufficient: ${menu.size}, expected 8")
+                mess.toast("Menu data incomplete")
+                return
             }
+            
+            for (i in 0..3) {
+                for (j in 0..6) {
+                    try {
+                        val dayIndex = j + 1
+                        if (dayIndex < menu.size && i < menu[dayIndex].particulars.size) {
+                            texts[i][j].text = menu[dayIndex].particulars[i].food
+                        } else {
+                            mess.log("Index out of bounds: day=$dayIndex, particular=$i")
+                            texts[i][j].text = "N/A"
+                        }
+                    } catch (e: Exception) {
+                        mess.log("Error setting food at [$i][$j]: ${e.message}")
+                        texts[i][j].text = "Error"
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            mess.log("Error in setFood: ${e.message}")
+            e.printStackTrace()
+            mess.toast("Error displaying menu")
         }
     }
 

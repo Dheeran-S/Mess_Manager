@@ -228,15 +228,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleMessCommitteeNavigation() {
-        val user = mess.getUser()
-        if (user.member && auth.currentUser != null) {
+        // Allow all authenticated users to access mess committee features
+        if (auth.currentUser != null) {
             val intent = Intent(this, MessCommitteeMain::class.java)
             startActivity(intent)
         } else {
             if (!isFinishing && !isDestroyed) {
                 mess.showAlertDialog(
                     "Alert!",
-                    "You are not a member of Mess Committee!",
+                    "Please login to access this feature!",
                     "Ok",
                     ""
                 ) {}
