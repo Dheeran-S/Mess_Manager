@@ -100,6 +100,11 @@
                 android:nestedScrollingEnabled="false"
                 android:paddingHorizontal="15dp" />
 
+            <!-- Leave Status Card -->
+            <include
+                android:id="@+id/leaveStatusCard"
+                layout="@layout/leave_status_card" />
+
             <LinearLayout
                 android:id="@+id/pollAdder"
                 android:layout_width="match_parent"

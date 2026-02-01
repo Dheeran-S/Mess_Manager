@@ -18,7 +18,9 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -37,6 +39,7 @@ import com.theayushyadav11.MessEase.ui.Adapters.DateAdapter
 import com.theayushyadav11.MessEase.ui.Adapters.DateItem
 import com.theayushyadav11.MessEase.ui.Adapters.MsgAdapter
 import com.theayushyadav11.MessEase.ui.NavigationDrawers.ViewModels.HomeViewModel
+import com.theayushyadav11.MessEase.ui.NavigationDrawers.ViewModels.MessLeavesViewModel
 import com.theayushyadav11.MessEase.ui.NavigationDrawers.viewModelFactories.HomeViewModelFactory
 import com.theayushyadav11.MessEase.utils.Constants.Companion.auth
 import com.theayushyadav11.MessEase.utils.Constants.Companion.databaseReference
@@ -76,6 +79,9 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
             setDateAdapter()
             initialise()
             
+            // Load leave status for user
+            setupLeaveStatus()
+            
             // NOW ENABLE EVERYTHING with safety checks
             setMainMenu {
                 mess.log("setMainMenu completed successfully")
@@ -89,6 +95,78 @@ class HomeFragment : Fragment(), DateAdapter.Listeners {
             mess.log("CRASH IN onViewCreated: ${e.message}")
             e.printStackTrace()
             mess.pbDismiss()
+        }
+    }
+    
+    private fun setupLeaveStatus() {
+        try {
+            val user = mess.getUser()
+            if (user.uid.isEmpty()) {
+                // Hide the leave card if user not logged in
+                binding.root.findViewById<View>(R.id.leaveStatusCard)?.visibility = View.GONE
+                return
+            }
+            
+            val leavesViewModel = ViewModelProvider(this)[MessLeavesViewModel::class.java]
+            
+            // Get user's leaves
+            leavesViewModel.getUserLeaves(user.uid) { leaves ->
+                val leaveCard = binding.root.findViewById<View>(R.id.leaveStatusCard)
+                
+                if (leaves.isEmpty()) {
+                    leaveCard?.visibility = View.GONE
+                    return@getUserLeaves
+                }
+                
+                leaveCard?.visibility = View.VISIBLE
+                
+                // Count by status (include both DENIED and REJECTED)
+                val pendingCount = leaves.count { it.status == "PENDING_APPROVAL" }
+                val approvedCount = leaves.count { it.status == "APPROVED" }
+                val deniedCount = leaves.count { it.status == "DENIED" || it.status == "REJECTED" }
+                
+                // Update UI
+                leaveCard?.findViewById<TextView>(R.id.tvPendingCount)?.text = pendingCount.toString()
+                leaveCard?.findViewById<TextView>(R.id.tvApprovedCount)?.text = approvedCount.toString()
+                leaveCard?.findViewById<TextView>(R.id.tvDeniedCount)?.text = deniedCount.toString()
+                
+                // Show latest leave
+                val latestLeave = leaves.firstOrNull()
+                if (latestLeave != null) {
+                    val latestContainer = leaveCard?.findViewById<LinearLayout>(R.id.latestLeaveContainer)
+                    val tvLatestLeave = leaveCard?.findViewById<TextView>(R.id.tvLatestLeave)
+                    
+                    latestContainer?.visibility = View.VISIBLE
+                    val leaveType = when (latestLeave.type) {
+                        "FULL_DAY" -> "Full Day"
+                        "MEAL_SKIP" -> "Meal Skip (${latestLeave.meal})"
+                        "EMERGENCY" -> "Emergency"
+                        else -> latestLeave.type
+                    }
+                    val statusText = when (latestLeave.status) {
+                        "PENDING_APPROVAL" -> "Pending"
+                        "APPROVED" -> "Approved"
+                        "DENIED" -> "Denied"
+                        else -> latestLeave.status
+                    }
+                    tvLatestLeave?.text = "$leaveType - ${latestLeave.date} - $statusText"
+                }
+                
+                // View all button - navigate to Mess Leave page
+                leaveCard?.findViewById<com.google.android.material.button.MaterialButton>(R.id.btnViewAllLeaves)?.setOnClickListener {
+                    try {
+                        val navController = findNavController()
+                        navController.navigate(R.id.nav_mess_leave)
+                    } catch (e: Exception) {
+                        mess.log("Error navigating to mess leave: ${e.message}")
+                        mess.toast("Unable to open leave page")
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            mess.log("Error setting up leave status: ${e.message}")
+            e.printStackTrace()
+            binding.root.findViewById<View>(R.id.leaveStatusCard)?.visibility = View.GONE
         }
     }
 

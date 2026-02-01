@@ -18,6 +18,12 @@
         android:label="Mess Leave"
         tools:layout="@layout/fragment_mess_leave" />
 
+    <fragment
+        android:id="@+id/nav_mess_leaves_list"
+        android:name="com.theayushyadav11.MessEase.ui.NavigationDrawers.Fragments.MessLeavesListFragment"
+        android:label="My Leave Requests"
+        tools:layout="@layout/fragment_mess_leaves_list" />
+
     <activity
         android:id="@+id/nav_messCommitteeActivity"
         android:name="com.theayushyadav11.MessEase.ui.MessCommittee.activities.MessCommitteeMain"
