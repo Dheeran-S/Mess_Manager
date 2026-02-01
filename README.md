@@ -1,93 +1,146 @@
-# **MessEase**
-## **Contributing**
-For contribution guidelines, see [Contributors.md](https://github.com/iiitl/MessEase/blob/master/Contributors.md).
+# MessEase  
+### Smart Mess Management Ecosystem for Educational Institutions
 
-![logo](https://github.com/user-attachments/assets/02c34e6a-2e85-4745-82b8-715d2fdda3df)
+**MessEase** is a complete **mess management ecosystem** consisting of:
 
-MessEase is an Android application designed to streamline and simplify mess-related operations at the Indian Institute of Information Technology, Lucknow. The app reduces administrative burdens, making daily tasks more efficient for the mess committee.
+📱 **Android Mobile App** – For students and mess committee members  
+🖥️ **Web Admin Portal** – For administrators to manage the entire system  
+
+Originally developed for the **Indian Institute of Information Technology, Lucknow**, the system reduces manual administrative work, improves communication, and ensures operational transparency.
 
 ---
 
-## **Features**
+# 📱 Student & Committee Mobile App
+
+The Android application helps students and mess committees manage daily dining operations efficiently.
+
+## 🚀 Core Features
 
 ### **1. Daily Menu Display**
-View the menu for each day, ensuring all users stay informed about meal options.  
-<img src="https://github.com/user-attachments/assets/0e54b882-d913-4494-a8b7-69b17f19d455" alt="Daily Menu" width="300" height="600">
+View the complete daily meal schedule in advance.  
+
+<img src="https://github.com/user-attachments/assets/0e54b882-d913-4494-a8b7-69b17f19d455" width="300"/>
+
+---
 
 ### **2. Automated Push Notifications**
-Receive notifications 30 minutes before each meal.
+Meal reminders **30 minutes before serving time** using Firebase Cloud Messaging (FCM).
 
-### **3. Mess Committee Section**
-A secure section exclusively for mess committee members to manage operations.
+---
 
-### **4. Admin Panel**
-An admin-only section to manage users, menus, and other administrative tasks.
+### **3. Mess Committee Portal**
+Secure access for committee members to manage operational tasks.
+
+---
+
+### **4. Admin Panel (Mobile)**
+Restricted administrative controls inside the app.
+
+---
 
 ### **5. Menu Management**
-Committee members can update the menu and notify the admin.  
-<img src="https://github.com/user-attachments/assets/35f2d513-bbbc-45f6-b01e-63c681cdbb99" width="300" height="600"/>
+Committee members can update menus and notify administrators instantly.  
 
-### **6. Polls and Announcements**
-Create polls, send announcements, and share images within the app.  
-<img src="https://github.com/user-attachments/assets/bdb54af2-f88a-4db5-886d-3cc388e4938f" width="300" height="600"/>  
-<img src="https://github.com/user-attachments/assets/75514b40-bcbf-473b-9972-a358631d537c" width="300" height="600"/>
+<img src="https://github.com/user-attachments/assets/35f2d513-bbbc-45f6-b01e-63c681cdbb99" width="300"/>
 
-### **7. Flexible Announcement Timings**
-Adjust announcement timings as needed.  
-<img src="https://github.com/user-attachments/assets/769975b3-bf6c-4e3c-9f04-ead2f6dda8fb" width="300" height="600"/>
+---
+
+### **6. Polls & Announcements**
+Create polls, share announcements, and upload images.  
+
+<img src="https://github.com/user-attachments/assets/bdb54af2-f88a-4db5-886d-3cc388e4938f" width="300"/>
+
+---
+
+### **7. Flexible Announcement Scheduling**
+
+<img src="https://github.com/user-attachments/assets/769975b3-bf6c-4e3c-9f04-ead2f6dda8fb" width="300"/>
+
+---
 
 ### **8. Payment Integration**
-Seamlessly make payments to the mess through the app.  
-<img src="https://github.com/user-attachments/assets/d22acd90-7ae2-4de8-9355-44ff01999697" alt="Payment" width="300" height="600">
+Secure mess fee payments via Razorpay.  
 
+<img src="https://github.com/user-attachments/assets/d22acd90-7ae2-4de8-9355-44ff01999697" width="300"/>
 
+---
 
 ### **9. Downloadable Menu**
-Download the current menu, which updates automatically.  
-<img src="https://github.com/user-attachments/assets/3b7d1c80-6995-4bbd-b161-1b759d030588" width="300" height="600"/>
 
-### **10. Admin Management of Members**
-The admin can add or remove committee members, with the member list displayed in a dedicated section.
-
-### **11. Review System**
-Users can leave reviews about the mess services, helping improve the quality of meals.  
-<img src="https://github.com/user-attachments/assets/8abeb46a-3ef0-4f50-81fd-438f7f134045" alt="Review" width="300" height="600">
-
-### **12. Dark Mode**
-The app supports a dark mode for better user experience.  
-<img src="https://github.com/user-attachments/assets/66765c71-4c29-4ae9-a224-245562dd49c5" alt="Darkmode" width="300" height="600">
+<img src="https://github.com/user-attachments/assets/3b7d1c80-6995-4bbd-b161-1b759d030588" width="300"/>
 
 ---
 
-## **Tech Stack**
+### **10. Review System**
 
-- **MVVM Architecture**
-- **Firebase Authentication (Email & Google)**
-- **Firebase Realtime Database**
-- **Firebase Firestore**
-- **RecyclerView**
-- **Navigation Drawer**
-- **Navigation Component**
-- **Razorpay Integration**
-- **Push Notifications (Google Cloud FCM)**
-- **Alarm Manager**
-- **Glide**
-- **OKHttp**
-- **Material Design Library**
-- **Lottie Animations**
-- **Room Database**
+<img src="https://github.com/user-attachments/assets/8abeb46a-3ef0-4f50-81fd-438f7f134045" width="300"/>
 
 ---
 
-## **Demo Video**
-[Watch Demo](https://github.com/user-attachments/assets/02c9048d-0d8a-4c44-aea7-d3542ae30826)
+### **11. Dark Mode Support**
+
+<img src="https://github.com/user-attachments/assets/66765c71-4c29-4ae9-a224-245562dd49c5" width="300"/>
 
 ---
 
-## **Future Scope**
-MessEase is designed with scalability in mind. While currently tailored for IIIT Lucknow, it can be adapted for use by other institutions as well.
+## 🧱 Mobile App Tech Stack
+
+| Layer | Technologies Used |
+|------|-------------------|
+| Architecture | MVVM |
+| Authentication | Firebase Authentication |
+| Database | Firebase Realtime DB, Firestore, Room |
+| Notifications | Firebase Cloud Messaging |
+| Payments | Razorpay |
+| Networking | OKHttp |
+| UI | RecyclerView, Navigation Component, Material Design |
+| Media | Glide, Lottie |
+| System Services | Alarm Manager |
 
 ---
 
-## **Repository Link**
-[MessEase GitHub Repository](https://github.com/Rohan-droid7341/MessEase.git)
+# 🖥️ Web Admin Portal
+
+The **Admin Portal** provides centralized control over the entire mess ecosystem.
+
+### 🔗 Live Deployment  
+👉 https://admin-portal-mess.vercel.app/
+
+### 💻 Repository  
+👉 https://github.com/aravind5423/AdminPortal_Mess
+
+## 🎯 Admin Portal Capabilities
+
+- Manage student records  
+- Approve or update menus  
+- Monitor payments  
+- Manage committee members  
+- Send announcements  
+- View reviews & feedback  
+- Control system-wide settings  
+
+---
+
+## 👨‍💻 Hackathon Project
+
+MessEase was developed as part of a **Hackathon Project** by:
+
+- **Aravind Kumar** – GitHub: https://github.com/aravind5423  
+- **Dheeran S** – GitHub: https://github.com/Dheeran-S  
+- **Uvan Adhithya** – GitHub: https://github.com/UvanAdhithya  
+
+---
+
+## 🔮 Future Scope
+
+- Multi-institution support  
+- QR-based meal attendance  
+- Advanced analytics dashboard  
+- Inventory & supply tracking  
+
+---
+
+## 📂 Repositories
+
+📱 Mobile App – https://github.com/Dheeran-S/Mess_Manager  
+🖥️ Admin Portal – https://github.com/aravind5423/AdminPortal_Mess
