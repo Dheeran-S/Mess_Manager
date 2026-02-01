@@ -10,6 +10,12 @@ Originally developed for the **Indian Institute of Information Technology, Luckn
 
 ---
 
+# 📺 Project Demo
+Check out the full walkthrough of the application:
+👉 **[Watch the Demo Video on YouTube](https://youtu.be/jpNwEep0uPk)**
+
+---
+
 # 📱 Student & Committee Mobile App
 
 The Android application helps students and mess committees manage daily dining operations efficiently.
@@ -104,10 +110,10 @@ Secure mess fee payments via Razorpay.
 The **Admin Portal** provides centralized control over the entire mess ecosystem.
 
 ### 🔗 Live Deployment  
-👉 https://admin-portal-mess.vercel.app/
+👉 [https://admin-portal-mess.vercel.app/](https://admin-portal-mess.vercel.app/)
 
 ### 💻 Repository  
-👉 https://github.com/aravind5423/AdminPortal_Mess
+👉 [https://github.com/aravind5423/AdminPortal_Mess](https://github.com/aravind5423/AdminPortal_Mess)
 
 ## 🎯 Admin Portal Capabilities
 
@@ -125,9 +131,9 @@ The **Admin Portal** provides centralized control over the entire mess ecosystem
 
 MessEase was developed as part of a **Hackathon Project** by:
 
-- **Aravind Kumar** – GitHub: https://github.com/aravind5423  
-- **Dheeran S** – GitHub: https://github.com/Dheeran-S  
-- **Uvan Adhithya** – GitHub: https://github.com/UvanAdhithya  
+- **Aravind Kumar** – [GitHub](https://github.com/aravind5423)  
+- **Dheeran S** – [GitHub](https://github.com/Dheeran-S)  
+- **Uvan Adhithya** – [GitHub](https://github.com/UvanAdhithya)  
 
 ---
 
@@ -142,5 +148,5 @@ MessEase was developed as part of a **Hackathon Project** by:
 
 ## 📂 Repositories
 
-📱 Mobile App – https://github.com/Dheeran-S/Mess_Manager  
-🖥️ Admin Portal – https://github.com/aravind5423/AdminPortal_Mess
+📱 **Mobile App** – [https://github.com/Dheeran-S/Mess_Manager](https://github.com/Dheeran-S/Mess_Manager)  
+🖥️ **Admin Portal** – [https://github.com/aravind5423/AdminPortal_Mess](https://github.com/aravind5423/AdminPortal_Mess)
